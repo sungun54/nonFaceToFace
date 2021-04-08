@@ -18,6 +18,16 @@
 		SELECT *
 		FROM article
 		WHERE 1
+		<if test="searchKeywordType == 'title'">
+			AND title LIKE '%#{searchKeyword}%'
+		</if>
+		<if test="searchKeywordType == 'body'">
+			AND title LIKE '%#{searchKeyword}%'
+		</if>
+		<if test="searchKeywordType == 'titleAndBody'">
+			AND (title LIKE '%#{searchKeyword}%' OR 'body' LIKE
+			'%#{searchKeyword}%')
+		</if>
 		ORDER BY id DESC
 	</select>
 
@@ -26,7 +36,8 @@
 		SET regDate = NOW(),
 		updateDate =
 		NOW(),
-		title = #{title},
+		title =
+		#{title},
 		`body` = #{body}
 	</insert>
 
