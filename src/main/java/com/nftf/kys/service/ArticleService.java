@@ -1,6 +1,7 @@
 package com.nftf.kys.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.nftf.kys.dto.Article;
 import com.nftf.kys.dto.ResultData;
 import com.nftf.kys.mapper.ArticleMapper;
+import com.nftf.kys.util.Util;
 
 @Service
 public class ArticleService {
@@ -18,10 +20,10 @@ public class ArticleService {
 		return articleMapper.getArticle(id);
 	}
 
-	public ResultData addArticle(String title, String body) {
-		articleMapper.addArticle(title, body);
+	public ResultData addArticle(Map<String, Object> param) {
+		articleMapper.addArticle(param);
 
-		int id = 1; // 임시
+		int id = Util.getAsInt(param.get("id"), 0); // 임시
 
 		return new ResultData("S-1", "성공하였습니다.", "id", id);
 	}
