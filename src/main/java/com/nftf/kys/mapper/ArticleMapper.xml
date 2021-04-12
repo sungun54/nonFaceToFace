@@ -18,15 +18,17 @@
 		SELECT *
 		FROM article
 		WHERE 1
-		<if test="searchKeywordType == 'title'">
-			AND title LIKE '%#{searchKeyword}%'
-		</if>
-		<if test="searchKeywordType == 'body'">
-			AND title LIKE '%#{searchKeyword}%'
-		</if>
-		<if test="searchKeywordType == 'titleAndBody'">
-			AND (title LIKE '%#{searchKeyword}%' OR 'body' LIKE
-			'%#{searchKeyword}%')
+		<if test="searchKeyword != null">
+			<if test="searchKeywordType == 'title'">
+				AND title LIKE '%#{searchKeyword}%'
+			</if>
+			<if test="searchKeywordType == 'body'">
+				AND title LIKE '%#{searchKeyword}%'
+			</if>
+			<if test="searchKeywordType == 'titleAndBody'">
+				AND (title LIKE '%#{searchKeyword}%' OR 'body' LIKE
+				'%#{searchKeyword}%')
+			</if>
 		</if>
 		ORDER BY id DESC
 	</select>
