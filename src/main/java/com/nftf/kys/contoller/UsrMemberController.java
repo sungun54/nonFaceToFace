@@ -1,6 +1,10 @@
 package com.nftf.kys.contoller;
 
+import java.net.http.HttpRequest;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,5 +58,35 @@ public class UsrMemberController {
 
 		return memberService.join(param);
 	}
+	
+	@ResponseBody
+	@RequestMapping("/usr/member/doLogin")
+	public ResultData doLogin(String loginId, String loginPw, HttpSession session) {
+		
+		if(session.getAttribute("loginedMemberId") != null) {
+			return new ResultData("F-4", "이미 로그인되어있는 아이디입니다.");
+		}
+		
+		if (loginId == null) {
+			return new ResultData("F-1", "loginId을 입력해주세요.");			
+		}
+		
+		Member existingMemmember = memberService.getMember(loginId);
+		
+		if (existingMemmember != null) {
+			return new ResultData("F-2", "존재하지않는 아이디입니다.", "loginId", loginId);
+		}
+		
+		if (loginPw == null) {
+			return new ResultData("F-1", "loginPw을 입력해주세요.");
+		}	
+		
+		if (existingMemmember.getLoginPw().equals(loginPw) == false) {
+			return new ResultData("F-3", "비밀번호가 일치하지 않습니다.");
+		}
+		
+		session.setAttribute("loginedMemberId", existingMemmember.getId());
 
+		return new ResultData("S-1", String.format("%s님 환영합니다.", existingMemmember.getNickname()));
+	}
 }
