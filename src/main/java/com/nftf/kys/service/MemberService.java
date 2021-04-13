@@ -23,8 +23,9 @@ public class MemberService {
 		return new ResultData("S-1", String.format("%s님 환영합니다", param.get("nickname")), "id", id);
 	}
 
-	public Member getMember(String loginId) {
+	public Member getMemberByLoginId(String loginId) {
 		return memberMapper.getMemberByLoginId(loginId);
 	}
+
 
 }
