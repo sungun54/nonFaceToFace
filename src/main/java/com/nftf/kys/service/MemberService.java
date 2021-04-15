@@ -27,5 +27,11 @@ public class MemberService {
 		return memberMapper.getMemberByLoginId(loginId);
 	}
 
+	public ResultData modifyMember(Map<String, Object> param) {
+		memberMapper.modifyMember(param);
+
+		return new ResultData("S-1", "회원정보가 수정되었습니다.");
+	}
+
 
 }
