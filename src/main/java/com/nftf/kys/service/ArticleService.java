@@ -23,7 +23,7 @@ public class ArticleService {
 	public ResultData addArticle(Map<String, Object> param) {
 		articleMapper.addArticle(param);
 
-		int id = Util.getAsInt(param.get("id"), 0); // 임시
+		int id = Util.getAsInt(param.get("id"), 0);
 
 		return new ResultData("S-1", "성공하였습니다.", "id", id);
 	}

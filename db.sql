@@ -1,7 +1,8 @@
 # 데이터베이스 생성
-DROP DATABASE IF EXISTS untactTeacher;
-CREATE DATABASE untactTeacher;
-USE untactTeacher;
+DROP DATABASE IF EXISTS non_face_to_face;
+CREATE DATABASE non_face_to_face;
+USE non_face_to_face;
+
 # 게시물 테이블 생성
 CREATE TABLE article (
     id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -36,4 +37,8 @@ loginPw = "user1",
 `name` = "user1",
 nickname = "user1",
 cellphoneNo = "01012341234",
-email = "jangka512@gmail.com";
+email = "sungun5435@gmail.com";
+
+
+# 게시물 테이블에 회원번호 칼럼 추가
+ALTER TABLE article AND COLUMN memberId INT(10) UNSIGNED NOT NULL AFTER updateDate;
