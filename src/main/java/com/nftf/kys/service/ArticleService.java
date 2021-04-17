@@ -15,7 +15,10 @@ import com.nftf.kys.util.Util;
 public class ArticleService {
 	@Autowired
 	private ArticleMapper articleMapper;
-
+	
+	@Autowired
+	private MemberService memberService;
+	
 	public Article getArticle(int id) {
 		return articleMapper.getArticle(id);
 	}
@@ -42,5 +45,21 @@ public class ArticleService {
 
 	public List<Article> getArticles(String searchKeywordType, String searchKeyword) {
 		return articleMapper.getArticles(searchKeywordType, searchKeyword);
+	}
+
+	public ResultData getActorCanModify(Article article, int actorId) {
+		if( article.getMemberId() == actorId) {
+			return new ResultData("S-1", "가능합니다.");
+		}
+		
+		if( memberService.isAdmin(actorId)) {
+			return new ResultData("S-2", "가능합니다.");
+		}
+		
+		return new ResultData("F-1", "권한이 없습니다.");
+	}
+
+	public ResultData getActorCanDelete(Article article, int actorId) {		
+		return getActorCanModify(article, actorId);
 	}
 }
