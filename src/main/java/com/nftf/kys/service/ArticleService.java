@@ -62,4 +62,12 @@ public class ArticleService {
 	public ResultData getActorCanDelete(Article article, int actorId) {		
 		return getActorCanModify(article, actorId);
 	}
+
+	public Article getForPrintArticle(int id) {
+		return articleMapper.getForPrintArticle(id);
+	}
+
+	public List<Article> getForPrintArticles(String searchKeywordType, String searchKeyword) {
+		return articleMapper.getForPrintArticles(searchKeywordType, searchKeyword);
+	}
 }
