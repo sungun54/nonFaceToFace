@@ -25,7 +25,7 @@ public class MemberService {
 
 	public Member getMemberByLoginId(String loginId) {
 		return memberMapper.getMemberByLoginId(loginId);
-	}
+	}	
 
 	public ResultData modifyMember(Map<String, Object> param) {
 		memberMapper.modifyMember(param);
@@ -35,6 +35,10 @@ public class MemberService {
 
 	public boolean isAdmin(int actorId) {
 		return actorId == 1;
+	}
+
+	public Member getMember(int id) {
+		return memberMapper.getMember(id);
 	}
 
 
