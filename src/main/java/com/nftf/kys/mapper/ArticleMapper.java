@@ -24,5 +24,5 @@ public interface ArticleMapper {
 
 	public Article getForPrintArticle(@Param("id") int id);
 
-	public List<Article> getForPrintArticles(@Param("searchKeywordType") String searchKeywordType, @Param(value = "searchKeyword") String searchKeyword);
+	public List<Article> getForPrintArticles(@Param("searchKeywordType") String searchKeywordType, @Param(value = "searchKeyword") String searchKeyword, @Param("limitStart") int limitStart, @Param("limitTake") int limitTake);
 }

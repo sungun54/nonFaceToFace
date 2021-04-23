@@ -67,7 +67,10 @@ public class ArticleService {
 		return articleMapper.getForPrintArticle(id);
 	}
 
-	public List<Article> getForPrintArticles(String searchKeywordType, String searchKeyword) {
-		return articleMapper.getForPrintArticles(searchKeywordType, searchKeyword);
+	public List<Article> getForPrintArticles(String searchKeywordType, String searchKeyword, int page, int itemsInAPage) {
+		int limitStart = (page - 1) * itemsInAPage;
+		int limitTake = itemsInAPage;
+
+		return articleMapper.getForPrintArticles(searchKeywordType, searchKeyword, limitStart, limitTake);
 	}
 }

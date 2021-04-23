@@ -40,7 +40,7 @@
 		</if>
 		ORDER BY id DESC
 	</select>
-	
+
 	<select id="getForPrintArticles" resultType="Article">
 		SELECT A.*,
 		IFNULL(M.nickname, "탈퇴회원") AS extra__writer
@@ -60,6 +60,9 @@
 			A.`body` LIKE CONCAT('%', #{searchKeyword}, '%'))
 		</if>
 		ORDER BY A.id DESC
+		<if test="limitStart != null and limitTake != null">
+			LIMIT #{limitStart}, #{limitTake}
+		</if>
 	</select>
 
 
@@ -82,13 +85,13 @@
 	<update id="modifyArticle">
 		UPDATE article
 		<set>
-			<if test="title !=null || body != null">
+			<if test="title != null or body != null">
 				SET updateDate = NOW(),
 			</if>
-			<if test="title !=null">
+			<if test="title != null">
 				title = #{title},
 			</if>
-			<if test="body !=null">
+			<if test="body != null">
 				`body` = #{body}
 			</if>
 		</set>
