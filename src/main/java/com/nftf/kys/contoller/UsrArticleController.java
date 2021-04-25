@@ -3,7 +3,7 @@ package com.nftf.kys.contoller;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nftf.kys.dto.Article;
+import com.nftf.kys.dto.Board;
 import com.nftf.kys.dto.ResultData;
 import com.nftf.kys.service.ArticleService;
-import com.nftf.kys.util.Util;
 
 @Controller
 public class UsrArticleController {
@@ -34,13 +34,21 @@ public class UsrArticleController {
 		if (article == null) {
 			return new ResultData("F-2", "존재하지 않는 게시물번호 입니다.");
 		}
-		
+
 		return new ResultData("S-1", "성공", "article", article);
 	}
 
 	@RequestMapping("/usr/article/list")
 	@ResponseBody
-	public ResultData showList(@RequestParam(defaultValue = "1") int boardId, String searchKeywordType, String searchKeyword, @RequestParam(defaultValue = "1") int page) {
+	public ResultData showList(@RequestParam(defaultValue = "1") int boardId, String searchKeywordType,
+			String searchKeyword, @RequestParam(defaultValue = "1") int page) {
+
+		Board board = articleService.getBoard(boardId);
+
+		if (board == null) {
+			return new ResultData("F-1", "존재하지 않는 게시판 입니다.");
+		}
+
 		if (searchKeywordType != null) {
 			searchKeywordType = searchKeywordType.trim();
 		}
@@ -56,22 +64,41 @@ public class UsrArticleController {
 		if (searchKeyword != null) {
 			searchKeyword = searchKeyword.trim();
 		}
-		
-		if ( searchKeyword == null) {
+
+		if (searchKeyword == null) {
 			searchKeywordType = null;
 		}
-		
+
 		int itemsInAPage = 20;
-		List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page, itemsInAPage);
+		List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page,
+				itemsInAPage);
 
 		return new ResultData("S-1", "성공", "articles", articles);
 	}
 
+	@RequestMapping("/usr/article/doAddReply")
+	@ResponseBody
+	public ResultData doAddReply(@RequestParam Map<String, Object> param, HttpServletRequest req) {
+		int loginedMemberId = (int)req.getAttribute("loginedMemberId");
+
+		if (param.get("body") == null) {
+			return new ResultData("F-1", "body를 입력해주세요.");
+		}
+
+		if (param.get("articleId") == null) {
+			return new ResultData("F-1", "articleId를 입력해주세요.");
+		}
+
+		param.put("memberId", loginedMemberId);
+
+		return articleService.addReply(param);
+	}
+
 	@RequestMapping("/usr/article/doAdd")
 	@ResponseBody
-	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpSession session) {
-		int loginedMemberId = Util.getAsInt(session.getAttribute("loginedMemberId"), 0);
-		
+	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpServletRequest req) {
+		int loginedMemberId = (int)req.getAttribute("loginedMemberId");
+
 		if (param.get("title") == null) {
 			return new ResultData("F-1", "title을 입력해주세요.");
 		}
@@ -79,7 +106,7 @@ public class UsrArticleController {
 		if (param.get("body") == null) {
 			return new ResultData("F-1", "body를 입력해주세요.");
 		}
-		
+
 		param.put("memberId", loginedMemberId);
 
 		return articleService.addArticle(param);
@@ -87,9 +114,9 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
-	public ResultData doDelete(Integer id, HttpSession session) {
-		int loginedMemberId = Util.getAsInt(session.getAttribute("loginedMemberId"), 0);		
-		
+	public ResultData doDelete(Integer id, HttpServletRequest req) {
+		int loginedMemberId = (int)req.getAttribute("loginedMemberId");
+
 		if (id == null) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
@@ -99,11 +126,11 @@ public class UsrArticleController {
 		if (article == null) {
 			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
 		}
-		
+
 		ResultData actorCanModifyRd = articleService.getActorCanDelete(article, loginedMemberId);
-		
-		if ( actorCanModifyRd.isFail()) {
-			return actorCanModifyRd;			
+
+		if (actorCanModifyRd.isFail()) {
+			return actorCanModifyRd;
 		}
 
 		return articleService.deleteArticle(id);
@@ -111,9 +138,9 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public ResultData doModify(Integer id, String title, String body, HttpSession session) {		
-		int loginedMemberId = Util.getAsInt(session.getAttribute("loginedMemberId"), 0);		
-		
+	public ResultData doModify(Integer id, String title, String body, HttpServletRequest req) {
+		int loginedMemberId = (int)req.getAttribute("loginedMemberId");
+
 		if (id == null) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
@@ -131,11 +158,11 @@ public class UsrArticleController {
 		if (article == null) {
 			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
 		}
-		
+
 		ResultData actorCanModifyRd = articleService.getActorCanModify(article, loginedMemberId);
-		
-		if ( actorCanModifyRd.isFail()) {
-			return actorCanModifyRd;			
+
+		if (actorCanModifyRd.isFail()) {
+			return actorCanModifyRd;
 		}
 
 		return articleService.modifyArticle(id, title, body);
