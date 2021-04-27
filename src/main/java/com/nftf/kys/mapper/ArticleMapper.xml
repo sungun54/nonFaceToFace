@@ -74,10 +74,10 @@
 		SET regDate = NOW(),
 		updateDate =
 		NOW(),
-		title =
-		#{title},
-		`body` = #{body},
-		memberId = #{memberId}
+		boardId = #{boardId},
+		memberId = #{memberId},
+		title = #{title},
+		`body` = #{body}
 	</insert>
 
 	<delete id="deleteArticle">
@@ -95,7 +95,7 @@
 				title = #{title},
 			</if>
 			<if test="body != null">
-				`body` = #{body}
+				`body` = #{body},
 			</if>
 		</set>
 		WHERE id = #{id}
