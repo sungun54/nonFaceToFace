@@ -56,7 +56,13 @@ public class UsrAdmMemberController {
 
 		return memberService.join(param);
 	}
+	
 
+	@RequestMapping("/adm/member/login")
+	public String login() {
+		return "adm/member/login";
+	}
+	
 	@ResponseBody
 	@RequestMapping("/adm/member/doLogin")
 	public ResultData doLogin(String loginId, String loginPw, HttpSession session) {
