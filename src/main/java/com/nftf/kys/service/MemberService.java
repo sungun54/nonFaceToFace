@@ -12,20 +12,21 @@ import com.nftf.kys.util.Util;
 
 @Service
 public class MemberService {
-	
-	@Autowired MemberMapper memberMapper;
-	
+
+	@Autowired
+	MemberMapper memberMapper;
+
 	public ResultData join(Map<String, Object> param) {
 		memberMapper.join(param);
-		
+
 		int id = Util.getAsInt(param.get("id"), 0);
-		
+
 		return new ResultData("S-1", String.format("%s님 환영합니다", param.get("nickname")), "id", id);
 	}
 
 	public Member getMemberByLoginId(String loginId) {
 		return memberMapper.getMemberByLoginId(loginId);
-	}	
+	}
 
 	public ResultData modifyMember(Map<String, Object> param) {
 		memberMapper.modifyMember(param);
@@ -36,7 +37,7 @@ public class MemberService {
 	public boolean isAdmin(int actorId) {
 		return actorId == 1;
 	}
-	
+
 	public boolean isAdmin(Member actor) {
 		return isAdmin(actor.getId());
 	}
@@ -45,5 +46,8 @@ public class MemberService {
 		return memberMapper.getMember(id);
 	}
 
+	public Member getMemberByAuthKey(String authKey) {
+		return memberMapper.getMemberByAuthKey(authKey);
+	}
 
 }
