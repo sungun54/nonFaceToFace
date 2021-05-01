@@ -4,11 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+	// CORS 허용
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**");
+	}
+
 	// beforeActionInterceptor 인터셉터 불러오기
 	@Autowired
 	@Qualifier("beforeActionInterceptor")
@@ -42,14 +49,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		// 로그인 필요
 		registry.addInterceptor(needLoginInterceptor).addPathPatterns("/**").excludePathPatterns("/")
 				.excludePathPatterns("/resource/**").excludePathPatterns("/usr/home/main")
-				.excludePathPatterns("/adm/**").excludePathPatterns("/usr/member/login")
-				.excludePathPatterns("/usr/member/doLogin").excludePathPatterns("/usr/member/join")
-				.excludePathPatterns("/usr/member/doJoin").excludePathPatterns("/usr/article/list")
-				.excludePathPatterns("/usr/article/detail").excludePathPatterns("/usr/reply/list")
-				.excludePathPatterns("/usr/member/findLoginId").excludePathPatterns("/usr/member/doFindLoginId")
-				.excludePathPatterns("/usr/member/findLoginPw").excludePathPatterns("/usr/member/doFindLoginPw")
-				.excludePathPatterns("/usr/file/test*").excludePathPatterns("/usr/file/doTest*")
-				.excludePathPatterns("/test/**").excludePathPatterns("/error");
+				.excludePathPatterns("/usr/member/authKey").excludePathPatterns("/adm/**")
+				.excludePathPatterns("/usr/member/login").excludePathPatterns("/usr/member/doLogin")
+				.excludePathPatterns("/usr/member/join").excludePathPatterns("/usr/member/doJoin")
+				.excludePathPatterns("/usr/article/list").excludePathPatterns("/usr/article/detail")
+				.excludePathPatterns("/usr/reply/list").excludePathPatterns("/usr/member/findLoginId")
+				.excludePathPatterns("/usr/member/doFindLoginId").excludePathPatterns("/usr/member/findLoginPw")
+				.excludePathPatterns("/usr/member/doFindLoginPw").excludePathPatterns("/usr/file/test*")
+				.excludePathPatterns("/usr/file/doTest*").excludePathPatterns("/test/**").excludePathPatterns("/error");
 
 		// 로그인 상태에서 접속할 수 없는 URI 전부 기술
 		registry.addInterceptor(needLogoutInterceptor).addPathPatterns("/usr/member/login")
