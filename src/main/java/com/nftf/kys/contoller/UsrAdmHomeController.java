@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class UsrAdmHomeController {
 
-	@ResponseBody
 	@RequestMapping("/adm/home/main")
 	public String showMain() {
-		return "안녕하세요";
+		return "adm/home/main";
 	}
 
 }
