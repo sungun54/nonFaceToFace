@@ -131,10 +131,8 @@ public class UsrAdmMemberController {
 		session.setAttribute("loginedMemberId", existingMember.getId());
 
 		String msg = String.format("%s님 환영합니다.", existingMember.getNickname());
-
-		if (redirectUrl == null) {
-			redirectUrl = "../home/main";
-		}
+		
+		redirectUrl = Util.ifEmpty(redirectUrl, "../home/main");
 
 		return Util.msgAndReplace(msg, redirectUrl);
 	}
