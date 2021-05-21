@@ -127,36 +127,15 @@ public class UsrAdmArticleController extends BaseController {
 		ResultData addArticleRd = articleService.addArticle(param);
 
 		int newArticleId = (int) addArticleRd.getBody().get("id");
-		
-		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();		
+
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 
 		for (String fileInputName : fileMap.keySet()) {
 			MultipartFile multipartFile = fileMap.get(fileInputName);
-			String[] fileInputNameBits = fileInputName.split("__");
-
-			if (fileInputNameBits[0].equals("file") == false) {
-				continue;
+			if (multipartFile.isEmpty() == false) {
+				genFileService.save(multipartFile, newArticleId);
 			}
 
-			int fileSize = (int) multipartFile.getSize();
-
-			if (fileSize <= 0) {
-				continue;
-			}
-
-			String relTypeCode = fileInputNameBits[1];
-			int relId = newArticleId;
-			String typeCode = fileInputNameBits[3];
-			String type2Code = fileInputNameBits[4];
-			int fileNo = Integer.parseInt(fileInputNameBits[5]);
-			String originFileName = multipartFile.getOriginalFilename();
-			String fileExtTypeCode = Util.getFileExtTypeCodeFromFileName(multipartFile.getOriginalFilename());
-			String fileExtType2Code = Util.getFileExtType2CodeFromFileName(multipartFile.getOriginalFilename());
-			String fileExt = Util.getFileExtFromFileName(multipartFile.getOriginalFilename()).toLowerCase();
-			String fileDir = Util.getNowYearMonthDateStr();
-
-			genFileService.saveMeta(relTypeCode, relId, typeCode, type2Code, fileNo, originFileName, fileExtTypeCode,
-					fileExtType2Code, fileExt, fileSize, fileDir);
 		}
 
 		return addArticleRd;
