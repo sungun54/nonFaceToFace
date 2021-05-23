@@ -15,10 +15,10 @@ import org.springframework.web.multipart.MultipartRequest;
 
 import com.nftf.kys.dto.Article;
 import com.nftf.kys.dto.Board;
+import com.nftf.kys.dto.GenFile;
 import com.nftf.kys.dto.ResultData;
 import com.nftf.kys.service.ArticleService;
 import com.nftf.kys.service.GenFileService;
-import com.nftf.kys.util.Util;
 
 @Controller
 public class UsrAdmArticleController extends BaseController {
@@ -79,6 +79,14 @@ public class UsrAdmArticleController extends BaseController {
 
 		List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page,
 				itemsInAPage);
+
+		for (Article article : articles) {
+			GenFile genFile = genFileService.getGenFile("article", article.getId(), "common", "attachment", 1);
+
+			if (genFile != null) {
+				article.setExtra__thumbImg(genFile.getForPrintUrl());
+			}
+		}
 
 		req.setAttribute("articles", articles);
 
