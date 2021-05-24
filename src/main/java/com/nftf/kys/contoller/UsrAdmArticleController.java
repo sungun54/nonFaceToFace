@@ -51,6 +51,8 @@ public class UsrAdmArticleController extends BaseController {
 
 		Board board = articleService.getBoard(boardId);
 
+		req.setAttribute("board", board);
+
 		if (board == null) {
 			return msgAndBack(req, "존재하지 않는 게시판 입니다.");
 		}
@@ -118,16 +120,16 @@ public class UsrAdmArticleController extends BaseController {
 
 	@RequestMapping("/adm/article/doAdd")
 	@ResponseBody
-	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpServletRequest req,
+	public String doAdd(@RequestParam Map<String, Object> param, HttpServletRequest req,
 			MultipartRequest multipartRequest) {
 		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
 
 		if (param.get("title") == null) {
-			return new ResultData("F-1", "title을 입력해주세요.");
+			return msgAndBack(req, "title을 입력해주세요.");
 		}
 
 		if (param.get("body") == null) {
-			return new ResultData("F-1", "body를 입력해주세요.");
+			return msgAndBack(req, "body를 입력해주세요.");
 		}
 
 		param.put("memberId", loginedMemberId);
@@ -146,7 +148,8 @@ public class UsrAdmArticleController extends BaseController {
 
 		}
 
-		return addArticleRd;
+		return msgAndReplace(req, String.format("%d번 게시물이 작성되었습니다.", newArticleId),
+				"../article/detail?id=" + newArticleId);
 	}
 
 	@RequestMapping("/adm/article/doDelete")

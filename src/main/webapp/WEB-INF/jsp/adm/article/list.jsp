@@ -3,6 +3,10 @@
 
 <%@ include file="../part/head.jspf"%>
 
+<script>
+	param.boardId = parseInt("${board.id}");
+</script>
+
 <section class="section-1">
 	<div class="bg-white shadow-md rounded container mx-auto p-8 mt-8">
 		<div class="flex items-center">
@@ -12,7 +16,6 @@
 			</select>
 			<script>
 				$('.section-1 .select-board-id').val(param.boardId);
-
 				$('.section-1 .select-board-id').change(function() {
 					location.href = '?boardId=' + this.value;
 				});
