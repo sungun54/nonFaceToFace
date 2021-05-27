@@ -17,6 +17,9 @@ import com.nftf.kys.util.Util;
 @Service
 public class ArticleService {
 	@Autowired
+	private GenFileService genFileService;
+
+	@Autowired
 	private ArticleMapper articleMapper;
 
 	@Autowired
@@ -24,7 +27,7 @@ public class ArticleService {
 
 	@Autowired
 	private ReplyMapper replyMapper;
-	
+
 	@Autowired
 	private MemberService memberService;
 
@@ -36,6 +39,16 @@ public class ArticleService {
 		articleMapper.addArticle(param);
 
 		int id = Util.getAsInt(param.get("id"), 0);
+
+		String genFileIdsStr = Util.ifEmpty((String) param.get("genFileIdsStr"), null);
+
+		if (genFileIdsStr != null) {
+			List<Integer> genFileIds = Util.getListDividedBy(genFileIdsStr, ",");
+
+			for (int genFileId : genFileIds) {
+				genFileService.changeRelId(genFileId, id);
+			}
+		}
 
 		return new ResultData("S-1", "성공하였습니다.", "id", id);
 	}
