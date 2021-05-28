@@ -131,4 +131,19 @@ public class GenFileService {
 		genFileMapper.changeRelId(id, relId);
 	}
 
+	public void deleteFiles(String relTypeCode, int relId) {
+		List<GenFile> genFiles = genFileMapper.getGenFiles(relTypeCode, relId);
+
+		for (GenFile genFile : genFiles) {
+			deleteFile(genFile);
+		}
+	}
+
+	private void deleteFile(GenFile genFile) {
+		String filePath = genFile.getFilePath(genFileDirPath);
+		Util.delteFile(filePath);
+
+		genFileMapper.deleteFile(genFile.getId());
+	}
+
 }
