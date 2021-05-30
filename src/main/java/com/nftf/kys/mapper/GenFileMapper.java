@@ -22,5 +22,7 @@ public interface GenFileMapper {
 	List<GenFile> getGenFiles(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId,
 			@Param("typeCode") String typeCode, @Param("type2Code") String type2Code);
 
+	List<GenFile> getGenFiles(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId);
+
 	void deleteFile(@Param("id") int id);
 }
