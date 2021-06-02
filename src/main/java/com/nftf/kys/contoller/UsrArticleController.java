@@ -15,6 +15,7 @@ import com.nftf.kys.dto.Article;
 import com.nftf.kys.dto.Board;
 import com.nftf.kys.dto.ResultData;
 import com.nftf.kys.service.ArticleService;
+import com.nftf.kys.util.Util;
 
 @Controller
 public class UsrArticleController {
@@ -79,7 +80,7 @@ public class UsrArticleController {
 	@RequestMapping("/usr/article/doAddReply")
 	@ResponseBody
 	public ResultData doAddReply(@RequestParam Map<String, Object> param, HttpServletRequest req) {
-		int loginedMemberId = (int)req.getAttribute("loginedMemberId");
+		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
 
 		if (param.get("body") == null) {
 			return new ResultData("F-1", "body를 입력해주세요.");
@@ -97,7 +98,7 @@ public class UsrArticleController {
 	@RequestMapping("/usr/article/doAdd")
 	@ResponseBody
 	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpServletRequest req) {
-		int loginedMemberId = (int)req.getAttribute("loginedMemberId");
+		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
 
 		if (param.get("title") == null) {
 			return new ResultData("F-1", "title을 입력해주세요.");
@@ -115,7 +116,7 @@ public class UsrArticleController {
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
 	public ResultData doDelete(Integer id, HttpServletRequest req) {
-		int loginedMemberId = (int)req.getAttribute("loginedMemberId");
+		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
 
 		if (id == null) {
 			return new ResultData("F-1", "id를 입력해주세요.");
@@ -138,18 +139,20 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public ResultData doModify(Integer id, String title, String body, HttpServletRequest req) {
-		int loginedMemberId = (int)req.getAttribute("loginedMemberId");
+	public ResultData doModify(@RequestParam Map<String, Object> param, HttpServletRequest req) {
+		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
 
-		if (id == null) {
+		int id = Util.getAsInt(param.get("id"), 0);
+
+		if (id == 0) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
 
-		if (title == null) {
+		if (Util.isEmpty(param.get("title"))) {
 			return new ResultData("F-1", "title을 입력해주세요.");
 		}
 
-		if (body == null) {
+		if (Util.isEmpty(param.get("body"))) {
 			return new ResultData("F-1", "body를 입력해주세요.");
 		}
 
@@ -165,6 +168,6 @@ public class UsrArticleController {
 			return actorCanModifyRd;
 		}
 
-		return articleService.modifyArticle(id, title, body);
+		return articleService.modifyArticle(param);
 	}
 }

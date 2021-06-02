@@ -1,8 +1,6 @@
 package com.nftf.kys.contoller;
 
 import java.util.HashMap;
-import java.util.HashMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +20,7 @@ import com.nftf.kys.dto.GenFile;
 import com.nftf.kys.dto.ResultData;
 import com.nftf.kys.service.ArticleService;
 import com.nftf.kys.service.GenFileService;
+import com.nftf.kys.util.Util;
 
 @Controller
 public class UsrAdmArticleController extends BaseController {
@@ -141,16 +140,6 @@ public class UsrAdmArticleController extends BaseController {
 
 		int newArticleId = (int) addArticleRd.getBody().get("id");
 
-		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
-
-		for (String fileInputName : fileMap.keySet()) {
-			MultipartFile multipartFile = fileMap.get(fileInputName);
-			if (multipartFile.isEmpty() == false) {
-				genFileService.save(multipartFile, newArticleId);
-			}
-
-		}
-
 		return msgAndReplace(req, String.format("%d번 게시물이 작성되었습니다.", newArticleId),
 				"../article/detail?id=" + newArticleId);
 	}
@@ -207,18 +196,20 @@ public class UsrAdmArticleController extends BaseController {
 
 	@RequestMapping("/adm/article/doModify")
 	@ResponseBody
-	public ResultData doModify(Integer id, String title, String body, HttpServletRequest req) {
+	public ResultData doModify(@RequestParam Map<String, Object> param, HttpServletRequest req) {
 		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
 
-		if (id == null) {
+		int id = Util.getAsInt(param.get("id"), 0);
+
+		if (id == 0) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
 
-		if (title == null) {
+		if (Util.isEmpty(param.get("title"))) {
 			return new ResultData("F-1", "title을 입력해주세요.");
 		}
 
-		if (body == null) {
+		if (Util.isEmpty(param.get("body"))) {
 			return new ResultData("F-1", "body를 입력해주세요.");
 		}
 
@@ -234,6 +225,6 @@ public class UsrAdmArticleController extends BaseController {
 			return actorCanModifyRd;
 		}
 
-		return articleService.modifyArticle(id, title, body);
+		return articleService.modifyArticle(param);
 	}
 }

@@ -16,7 +16,7 @@ public interface ArticleMapper {
 
 	void deleteArticle(@Param("id") int id);
 
-	void modifyArticle(@Param("id") int id, @Param("title") String title, @Param("body") String body);
+	void modifyArticle(Map<String, Object> param);
 
 	List<Article> getArticles(@Param("searchKeywordType") String searchKeywordType,
 			@Param(value = "searchKeyword") String searchKeyword);
@@ -25,5 +25,6 @@ public interface ArticleMapper {
 
 	List<Article> getForPrintArticles(@Param("boardId") int boardId,
 			@Param("searchKeywordType") String searchKeywordType, @Param("searchKeyword") String searchKeyword,
-			@Param("limitStart") int limitStart, @Param("limitTake") int limitTake);	
+			@Param("limitStart") int limitStart, @Param("limitTake") int limitTake);
+
 }

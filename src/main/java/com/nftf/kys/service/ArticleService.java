@@ -40,6 +40,12 @@ public class ArticleService {
 
 		int id = Util.getAsInt(param.get("id"), 0);
 
+		changeInputFileRelIds(param, id);
+
+		return new ResultData("S-1", "성공하였습니다.", "id", id);
+	}
+
+	private void changeInputFileRelIds(Map<String, Object> param, int id) {
 		String genFileIdsStr = Util.ifEmpty((String) param.get("genFileIdsStr"), null);
 
 		if (genFileIdsStr != null) {
@@ -49,8 +55,6 @@ public class ArticleService {
 				genFileService.changeRelId(genFileId, id);
 			}
 		}
-
-		return new ResultData("S-1", "성공하였습니다.", "id", id);
 	}
 
 	public ResultData deleteArticle(int id) {
@@ -61,8 +65,10 @@ public class ArticleService {
 		return new ResultData("S-1", "삭제하였습니다.", "id", id);
 	}
 
-	public ResultData modifyArticle(int id, String title, String body) {
-		articleMapper.modifyArticle(id, title, body);
+	public ResultData modifyArticle(Map<String, Object> param) {
+		articleMapper.modifyArticle(param);
+
+		int id = Util.getAsInt(param.get("id"), 0);
 
 		return new ResultData("S-1", "게시물을 수정하였습니다.", "id", id);
 	}
@@ -110,4 +116,5 @@ public class ArticleService {
 
 		return new ResultData("S-1", "성공하였습니다.", "id", id);
 	}
+
 }
