@@ -56,6 +56,14 @@
 				input.value = '';
 			}
 
+			for (let inputNo = 1; inputNo <= ArticleModify__fileInputMaxCount; inputNo++) {
+				const input = form["deleteFile__article__" + articleId
+						+ "__common__attachment__" + inputNo];
+				if (input) {
+					input.checked = false;
+				}
+			}
+
 			form.submit();
 		};
 		const startUploadFiles = function(onSuccess) {
@@ -124,7 +132,7 @@
 					<div class="lg:flex lg:items-center lg:w-28">
 						<span>첨부파일 ${inputNo}</span>
 					</div>
-					<div class="lg:flex-grow">
+					<div class="lg:flex-grow input-file-wrap">
 						<input type="file"
 							name="file__article__${article.id}__common__attachment__${inputNo}"
 							class="form-row-input w-full rounded-sm" />
@@ -135,7 +143,9 @@
 								( ${Util.numberFormat(file.fileSize)} Byte )
 							</div>
 							<div>
-								<label> <input type="checkbox"
+								<label> <<input
+									onclick="$(this).closest('.input-file-wrap').find(' > input[type=file]').val('')"
+									type="checkbox"
 									name="deleteFile__article__${article.id}__common__attachment__${fileNo}"
 									value="Y" /> <span>삭제</span>
 								</label>
